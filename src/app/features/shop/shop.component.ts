@@ -14,15 +14,17 @@ import { CATEGORY_LABELS, CATEGORY_ICONS, ProductCategory } from '../../core/mod
   template: `
     <!-- Page Header -->
     <section class="shop-hero">
-      <div class="hero-pattern"></div>
+      <div class="hero-lines"></div>
       <div class="shop-hero-content">
-        <h1>
-          @if (activeCategory() !== 'all') {
-            <span class="cat-icon-big">{{ catIcon() }}</span>
-          }
-          {{ pageTitle() }}
-        </h1>
-        <p>{{ productService.filteredProducts().length }} article{{ productService.filteredProducts().length > 1 ? 's' : '' }}</p>
+        <div class="hero-eyebrow">
+          <span class="eyebrow-rule"></span>
+          <span class="eyebrow-label">{{ activeCategory() === 'all' ? 'Collection' : 'Boutique' }}</span>
+          <span class="eyebrow-rule"></span>
+        </div>
+        <h1>{{ pageTitle() }}</h1>
+        <p class="hero-count">
+          {{ productService.filteredProducts().length }}&nbsp;article{{ productService.filteredProducts().length > 1 ? 's' : '' }}
+        </p>
       </div>
     </section>
 
@@ -141,31 +143,67 @@ import { CATEGORY_LABELS, CATEGORY_ICONS, ProductCategory } from '../../core/mod
   styles: [`
     .shop-hero {
       background: #0D0D0D;
-      padding: 7rem 2rem 3rem;
+      padding: 6.5rem 2rem 2.75rem;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-    .hero-pattern {
+    /* Subtle diagonal-stripe texture */
+    .hero-lines {
       position: absolute;
       inset: 0;
-      background-image: repeating-conic-gradient(rgba(232,119,42,0.07) 0 90deg, transparent 90deg 180deg) 0 0 / 40px 40px;
+      background-image: repeating-linear-gradient(
+        -55deg,
+        transparent,
+        transparent 38px,
+        rgba(232,119,42,0.04) 38px,
+        rgba(232,119,42,0.04) 39px
+      );
       pointer-events: none;
     }
     .shop-hero-content { position: relative; z-index: 1; }
-    .shop-hero h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 900;
-      color: #fff;
-      margin: 0 0 0.5rem;
-      letter-spacing: -0.02em;
+
+    /* Eyebrow — "Collection" / "Boutique" with orange rules */
+    .hero-eyebrow {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 1rem;
+      margin-bottom: 1.1rem;
     }
-    .cat-icon-big { font-size: 2.5rem; }
-    .shop-hero p { color: rgba(255,255,255,0.4); font-size: 0.9rem; margin: 0; }
+    .eyebrow-rule {
+      width: 36px;
+      height: 1px;
+      background: var(--orange);
+      opacity: 0.8;
+      flex-shrink: 0;
+    }
+    .eyebrow-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+    }
+
+    /* Main title */
+    .shop-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.75rem);
+      font-weight: 900;
+      color: #fff;
+      margin: 0 0 0.9rem;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+    }
+
+    /* Article count */
+    .hero-count {
+      color: rgba(255,255,255,0.32);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      margin: 0;
+      text-transform: uppercase;
+    }
 
     .shop-layout {
       display: grid;
