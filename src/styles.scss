@@ -10,6 +10,7 @@
 }
 
 :root {
+  /* Brand colours — never change */
   --orange:      #E8772A;
   --orange-dark: #C45A0F;
   --gold:        #C9A96E;
@@ -22,6 +23,37 @@
 
   --font-body:    'Inter', 'Segoe UI', sans-serif;
   --font-heading: 'Space Grotesk', 'Inter', sans-serif;
+
+  /* Light mode (default) */
+  --bg:                 #FFFFFF;
+  --bg-alt:             #F9F5F0;
+  --surface:            #FFFFFF;
+  --surface-2:          #F5F0EB;
+  --text:               #0D0D0D;
+  --text-muted:         #6B6B6B;
+  --border-col:         #E8E8E8;
+  --nav-scrolled-bg:    rgba(255, 255, 255, 0.96);
+  --nav-scrolled-text:  #0D0D0D;
+  --nav-scrolled-shadow: 0 4px 30px rgba(0,0,0,0.06);
+  --card-bg:            #FFFFFF;
+  --input-bg:           #FFFFFF;
+  --input-border:       #E8E8E8;
+}
+
+[data-theme='dark'] {
+  --bg:                 #0A0912;
+  --bg-alt:             #1C1B2E;
+  --surface:            #1C1B2E;
+  --surface-2:          #252441;
+  --text:               #F9F5F0;
+  --text-muted:         #9B9BB0;
+  --border-col:         rgba(255,255,255,0.08);
+  --nav-scrolled-bg:    rgba(10, 9, 18, 0.96);
+  --nav-scrolled-text:  #F9F5F0;
+  --nav-scrolled-shadow: 0 4px 30px rgba(0,0,0,0.5);
+  --card-bg:            #1C1B2E;
+  --input-bg:           #252441;
+  --input-border:       rgba(255,255,255,0.1);
 }
 
 html {
@@ -33,10 +65,11 @@ html {
 
 body {
   font-family: var(--font-body);
-  color: var(--black);
-  background: var(--white);
+  color: var(--text);
+  background: var(--bg);
   line-height: 1.6;
   overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -83,3 +116,97 @@ a {
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; }
 input[type='number'] { -moz-appearance: textfield; }
+
+/* ===================================================
+   DARK MODE — Global component overrides
+   (Using !important to beat Angular's emulated
+    encapsulation specificity where CSS vars can't reach)
+   =================================================== */
+
+[data-theme='dark'] {
+  /* Sections */
+  .categories-section { background: var(--bg) !important; }
+  .featured-section   { background: var(--bg) !important; }
+  .new-arrivals       { background: var(--bg) !important; }
+  .section-header h2  { color: var(--text) !important; }
+  .section-header p   { color: var(--text-muted) !important; }
+
+  /* Category cards */
+  .cat-card           { background: var(--surface) !important; border-color: transparent !important; }
+  .cat-info h3        { color: var(--text) !important; }
+  .cat-count          { color: var(--text-muted) !important; }
+
+  /* Product card */
+  .card               { background: var(--card-bg) !important; box-shadow: none !important; }
+  .card-name          { color: var(--text) !important; }
+  .card-name a        { color: var(--text) !important; }
+  .price-current      { color: var(--text) !important; }
+  .review-count       { color: var(--text-muted) !important; }
+  .color-dot          { border-color: rgba(255,255,255,0.15) !important; }
+  .card:hover         { box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important; }
+
+  /* Cart drawer */
+  .cart-drawer        { background: var(--surface) !important; }
+  .cart-header h2     { color: var(--text) !important; }
+  .cart-header        { border-color: var(--border-col) !important; }
+  .cart-item          { background: var(--surface-2) !important; border-color: var(--border-col) !important; }
+  .item-name          { color: var(--text) !important; }
+  .item-meta          { color: var(--text-muted) !important; }
+  .item-price         { color: var(--text) !important; }
+  .item-qty button    { background: var(--surface) !important; border-color: var(--border-col) !important; color: var(--text) !important; }
+  .item-qty span      { color: var(--text) !important; }
+  .cart-footer        { border-color: var(--border-col) !important; }
+  .total-row          { color: var(--text-muted) !important; }
+  .total-row span:last-child { color: var(--text) !important; }
+  .total-final        { border-color: var(--border-col) !important; color: var(--text) !important; }
+  .total-final span   { color: var(--text) !important; }
+  .close-btn          { border-color: var(--border-col) !important; color: var(--text) !important; }
+  .close-btn:hover    { background: var(--surface-2) !important; }
+  .empty-cart p       { color: var(--text-muted) !important; }
+  .continue-btn       { color: var(--text-muted) !important; }
+  .continue-btn:hover { color: var(--text) !important; }
+
+  /* Shop page */
+  .shop-layout        { background: var(--bg) !important; }
+  .sidebar            { background: var(--surface) !important; border-color: var(--border-col) !important; }
+  .sidebar-title      { color: var(--text) !important; }
+  .filter-title       { color: var(--text) !important; }
+  .filter-btn         { background: var(--surface-2) !important; color: var(--text) !important; border-color: var(--border-col) !important; }
+  .filter-btn.active  { background: var(--orange) !important; color: #fff !important; border-color: var(--orange) !important; }
+  .price-inputs input { background: var(--input-bg) !important; color: var(--text) !important; border-color: var(--input-border) !important; }
+  .filter-reset       { color: var(--text-muted) !important; }
+  .cat-chip           { background: var(--surface) !important; color: var(--text-muted) !important; border-color: var(--border-col) !important; }
+  .cat-chip.active    { background: var(--orange) !important; color: #fff !important; border-color: var(--orange) !important; }
+  .sort-select select { background: var(--input-bg) !important; color: var(--text) !important; border-color: var(--input-border) !important; }
+  .search-input input { background: var(--input-bg) !important; color: var(--text) !important; border-color: var(--input-border) !important; }
+  .view-btn           { color: var(--text-muted) !important; }
+  .view-btn.active    { color: var(--orange) !important; }
+  .product-count      { color: var(--text-muted) !important; }
+  .empty-state        { color: var(--text-muted) !important; }
+  .empty-state h3     { color: var(--text) !important; }
+
+  /* Checkout */
+  .checkout-page      { background: var(--bg) !important; }
+  .checkout-header    { background: var(--surface) !important; border-color: var(--border-col) !important; }
+  .step-label         { color: var(--text-muted) !important; }
+  .step.active .step-label { color: var(--text) !important; }
+  .info-card, .payment-section, .review-section { background: var(--surface) !important; border-color: var(--border-col) !important; }
+  .card-title         { color: var(--text) !important; }
+  .form-group label   { color: var(--text-muted) !important; }
+  .form-group input, .form-group select { background: var(--input-bg) !important; color: var(--text) !important; border-color: var(--input-border) !important; }
+  .order-summary-sidebar { background: var(--surface) !important; border-color: var(--border-col) !important; }
+  .summary-title      { color: var(--text) !important; }
+  .summary-item-name  { color: var(--text) !important; }
+  .summary-item-meta  { color: var(--text-muted) !important; }
+  .summary-total      { border-color: var(--border-col) !important; color: var(--text) !important; }
+  .payment-method     { background: var(--surface-2) !important; border-color: var(--border-col) !important; color: var(--text) !important; }
+  .payment-method.active { border-color: var(--orange) !important; }
+  .payment-method label { color: var(--text) !important; }
+
+  /* Btn outline */
+  .btn-outline        { border-color: var(--border-col) !important; color: var(--text) !important; }
+  .btn-outline:hover  { background: var(--text) !important; color: var(--bg) !important; border-color: var(--text) !important; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar-track { background: var(--surface-2) !important; }
+}

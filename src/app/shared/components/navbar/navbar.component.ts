@@ -2,6 +2,7 @@ import { Component, HostListener, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { CATEGORY_LABELS, ProductCategory } from '../../../core/models/product.model';
 import { CartComponent } from '../../../features/cart/cart.component';
 
@@ -10,12 +11,12 @@ import { CartComponent } from '../../../features/cart/cart.component';
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, CartComponent],
   template: `
-    <header class="navbar" [class.scrolled]="scrolled()" [class.menu-open]="mobileOpen()">
+    <header class="navbar" [class.scrolled]="scrolled()" [class.menu-open]="mobileOpen()" [class.light-mode]="!theme.isDark()">
       <div class="nav-container">
-        <!-- Logo -->
-        <a routerLink="/" class="nav-logo">
-          <span class="logo-diamond">◆</span>
-          <span class="logo-text">Diamond<span>Wear</span></span>
+
+        <!-- D-Wear Logo -->
+        <a routerLink="/" class="nav-logo" aria-label="Diamond Wear – Accueil">
+          <img src="logo2.jpg" class="logo-img" alt="Diamond Wear"/>
         </a>
 
         <!-- Desktop Nav -->
@@ -37,12 +38,38 @@ import { CartComponent } from '../../../features/cart/cart.component';
 
         <!-- Right Actions -->
         <div class="nav-actions">
-          <button class="search-btn" (click)="searchOpen.set(!searchOpen())" aria-label="Rechercher">
+          <!-- Search -->
+          <button class="icon-btn" (click)="searchOpen.set(!searchOpen())" aria-label="Rechercher">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
           </button>
-          <button class="cart-btn" (click)="cart.toggleCart()" aria-label="Panier">
+
+          <!-- Theme toggle -->
+          <button class="icon-btn theme-toggle" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Mode clair' : 'Mode sombre'">
+            @if (theme.isDark()) {
+              <!-- Sun icon -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            } @else {
+              <!-- Moon icon -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            }
+          </button>
+
+          <!-- Cart -->
+          <button class="icon-btn cart-btn" (click)="cart.toggleCart()" aria-label="Panier">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
               <line x1="3" y1="6" x2="21" y2="6"/>
@@ -52,6 +79,8 @@ import { CartComponent } from '../../../features/cart/cart.component';
               <span class="cart-count">{{ cart.itemCount() }}</span>
             }
           </button>
+
+          <!-- Hamburger -->
           <button class="mobile-menu-btn" (click)="mobileOpen.update(v => !v)" aria-label="Menu">
             <span [class.open]="mobileOpen()"></span>
           </button>
@@ -98,9 +127,9 @@ import { CartComponent } from '../../../features/cart/cart.component';
       padding: 0 2rem;
     }
     .navbar.scrolled {
-      background: rgba(13,13,13,0.92);
+      background: var(--nav-scrolled-bg, rgba(13,13,13,0.92));
       backdrop-filter: blur(20px);
-      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+      box-shadow: var(--nav-scrolled-shadow, 0 4px 30px rgba(0,0,0,0.3));
     }
     .nav-container {
       max-width: 1400px;
@@ -111,24 +140,25 @@ import { CartComponent } from '../../../features/cart/cart.component';
       justify-content: space-between;
       gap: 2rem;
     }
+
+    /* Logo */
     .nav-logo {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
       text-decoration: none;
-      color: #fff;
-      font-weight: 900;
-      font-size: 1.25rem;
-      letter-spacing: -0.02em;
+      flex-shrink: 0;
     }
-    .logo-diamond {
-      color: #E8772A;
-      font-size: 1.5rem;
-      animation: pulse 2s ease-in-out infinite;
+    .logo-img {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      padding: 4px 8px;
+      background: rgba(255,255,255,0.96);
     }
-    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
-    .logo-text span { color: #E8772A; }
 
+    /* Nav links */
     .nav-links {
       display: flex;
       align-items: center;
@@ -153,7 +183,12 @@ import { CartComponent } from '../../../features/cart/cart.component';
     }
     .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
     .nav-links a:hover, .nav-links a.active { color: #fff; }
+    /* Light mode scrolled */
+    .navbar.scrolled.light-mode .nav-links a { color: rgba(13,13,13,0.75); }
+    .navbar.scrolled.light-mode .nav-links a:hover,
+    .navbar.scrolled.light-mode .nav-links a.active { color: #0D0D0D; }
 
+    /* Dropdown */
     .nav-dropdown { position: relative; }
     .dropdown-menu {
       position: absolute;
@@ -170,6 +205,7 @@ import { CartComponent } from '../../../features/cart/cart.component';
       gap: 0.25rem;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
+    .navbar.light-mode .dropdown-menu { background: #fff; box-shadow: 0 20px 60px rgba(0,0,0,0.12); border-color: #E8E8E8; }
     .nav-dropdown:hover .dropdown-menu { display: flex; }
     .dropdown-item {
       padding: 0.6rem 1rem;
@@ -179,16 +215,18 @@ import { CartComponent } from '../../../features/cart/cart.component';
       transition: background 0.2s, color 0.2s !important;
       white-space: nowrap;
     }
+    .navbar.light-mode .dropdown-item { color: rgba(13,13,13,0.7) !important; }
     .dropdown-item:hover { background: rgba(232,119,42,0.15); color: #E8772A !important; }
     .dropdown-item::after { display: none !important; }
 
-    .nav-actions { display: flex; align-items: center; gap: 1rem; }
-    .search-btn, .cart-btn {
+    /* Actions */
+    .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+    .icon-btn {
       background: none;
       border: none;
       color: rgba(255,255,255,0.85);
       cursor: pointer;
-      padding: 0.5rem;
+      padding: 0.45rem;
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -196,7 +234,10 @@ import { CartComponent } from '../../../features/cart/cart.component';
       transition: color 0.2s, background 0.2s;
       position: relative;
     }
-    .search-btn:hover, .cart-btn:hover { color: #E8772A; background: rgba(232,119,42,0.1); }
+    .icon-btn:hover { color: #E8772A; background: rgba(232,119,42,0.1); }
+    .navbar.scrolled.light-mode .icon-btn { color: rgba(13,13,13,0.7); }
+    .navbar.scrolled.light-mode .icon-btn:hover { color: #E8772A; }
+
     .cart-count {
       position: absolute;
       top: 0; right: 0;
@@ -213,6 +254,10 @@ import { CartComponent } from '../../../features/cart/cart.component';
     }
     @keyframes pop { 0%{transform:scale(0)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
 
+    .theme-toggle { transition: transform 0.4s ease, color 0.2s, background 0.2s; }
+    .theme-toggle:active { transform: rotate(30deg) scale(0.9); }
+
+    /* Hamburger */
     .mobile-menu-btn {
       display: none;
       background: none;
@@ -236,16 +281,17 @@ import { CartComponent } from '../../../features/cart/cart.component';
       position: relative;
     }
     .mobile-menu-btn span::before,
-    .mobile-menu-btn span::after {
-      content: '';
-      position: absolute;
-    }
+    .mobile-menu-btn span::after { content: ''; position: absolute; }
     .mobile-menu-btn span::before { top: -7px; }
     .mobile-menu-btn span::after { top: 7px; }
     .mobile-menu-btn span.open { background: transparent; }
     .mobile-menu-btn span.open::before { transform: rotate(45deg); top: 0; }
     .mobile-menu-btn span.open::after { transform: rotate(-45deg); top: 0; }
+    .navbar.scrolled.light-mode .mobile-menu-btn span,
+    .navbar.scrolled.light-mode .mobile-menu-btn span::before,
+    .navbar.scrolled.light-mode .mobile-menu-btn span::after { background: #0D0D0D; }
 
+    /* Search bar */
     .search-bar {
       background: rgba(13,13,13,0.95);
       border-top: 1px solid rgba(255,255,255,0.1);
@@ -253,8 +299,8 @@ import { CartComponent } from '../../../features/cart/cart.component';
       display: flex;
       align-items: center;
       gap: 1rem;
-      max-width: 100%;
     }
+    .navbar.light-mode .search-bar { background: rgba(255,255,255,0.98); border-color: #E8E8E8; }
     .search-bar input {
       flex: 1;
       background: none;
@@ -263,15 +309,16 @@ import { CartComponent } from '../../../features/cart/cart.component';
       font-size: 1.1rem;
       outline: none;
     }
+    .navbar.light-mode .search-bar input { color: #0D0D0D; }
     .search-bar input::placeholder { color: rgba(255,255,255,0.4); }
+    .navbar.light-mode .search-bar input::placeholder { color: rgba(13,13,13,0.3); }
     .search-bar button {
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.6);
-      cursor: pointer;
-      font-size: 1.2rem;
+      background: none; border: none;
+      color: rgba(255,255,255,0.6); cursor: pointer; font-size: 1.2rem;
     }
+    .navbar.light-mode .search-bar button { color: rgba(13,13,13,0.5); }
 
+    /* Mobile nav */
     .mobile-nav {
       display: flex;
       flex-direction: column;
@@ -279,6 +326,7 @@ import { CartComponent } from '../../../features/cart/cart.component';
       padding: 1.5rem 2rem;
       border-top: 1px solid rgba(255,255,255,0.05);
     }
+    .navbar.light-mode .mobile-nav { background: #fff; border-color: #E8E8E8; }
     .mobile-nav a {
       color: rgba(255,255,255,0.85);
       text-decoration: none;
@@ -287,15 +335,13 @@ import { CartComponent } from '../../../features/cart/cart.component';
       font-weight: 600;
       font-size: 1rem;
     }
-    .mobile-nav .mobile-cat {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.5);
-      padding-left: 1rem;
-    }
+    .navbar.light-mode .mobile-nav a { color: #0D0D0D; border-color: #E8E8E8; }
+    .mobile-nav .mobile-cat { font-size: 0.85rem; color: rgba(255,255,255,0.5); padding-left: 1rem; }
+    .navbar.light-mode .mobile-nav .mobile-cat { color: rgba(13,13,13,0.5); }
 
+    /* Cart overlay */
     .cart-overlay {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(0,0,0,0.5);
       z-index: 1099;
       backdrop-filter: blur(4px);
@@ -309,6 +355,7 @@ import { CartComponent } from '../../../features/cart/cart.component';
 })
 export class NavbarComponent {
   cart = inject(CartService);
+  theme = inject(ThemeService);
   scrolled = signal(false);
   mobileOpen = signal(false);
   searchOpen = signal(false);

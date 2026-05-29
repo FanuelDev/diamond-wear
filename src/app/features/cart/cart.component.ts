@@ -29,8 +29,8 @@ import { CartService } from '../../core/services/cart.service';
           <ul class="cart-items">
             @for (item of cart.items(); track $index; let i = $index) {
               <li class="cart-item">
-                <div class="item-image" [style.background]="item.product.gradient">
-                  <span>{{ item.product.icon }}</span>
+                <div class="item-image">
+                  <img [src]="item.product.imageUrl" [alt]="item.product.name" class="item-img"/>
                 </div>
                 <div class="item-info">
                   <p class="item-name">{{ item.product.name }}</p>
@@ -175,11 +175,14 @@ import { CartService } from '../../core/services/cart.service';
     .item-image {
       width: 70px; height: 80px;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
+      overflow: hidden;
       flex-shrink: 0;
+      background: var(--surface-2, #F5F0EB);
+    }
+    .item-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .item-info { flex: 1; min-width: 0; }
     .item-name { font-weight: 700; font-size: 0.9rem; margin: 0 0 0.2rem; color: #0D0D0D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

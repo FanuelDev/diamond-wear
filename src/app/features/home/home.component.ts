@@ -6,6 +6,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 import { CATEGORY_LABELS, ProductCategory } from '../../core/models/product.model';
 import { CartService } from '../../core/services/cart.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'dw-home',
@@ -13,12 +14,14 @@ import { CartService } from '../../core/services/cart.service';
   imports: [CommonModule, RouterLink, ProductCardComponent, ScrollRevealDirective],
   template: `
     <!-- HERO -->
-    <section class="hero">
+    <section class="hero" [class.light-mode]="!theme.isDark()">
       <div class="hero-bg-pattern"></div>
       <div class="hero-shapes">
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
         <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
       </div>
       <div class="hero-content">
         <div class="hero-text">
@@ -57,33 +60,32 @@ import { CartService } from '../../core/services/cart.service';
           </div>
         </div>
         <div class="hero-visual">
-          <div class="hero-product-card">
-            <div class="hpc-inner">
-              <div class="hpc-image">
-                <span class="hpc-icon">👘</span>
-                <div class="hpc-badge">NEW</div>
+          <div class="hero-img-wrap">
+            <img class="hero-img"
+                 src="https://images.unsplash.com/photo-1637370428744-6b2cc97727df?w=520&h=660&fit=crop&crop=top&q=85&auto=format"
+                 alt="Diamond Wear Collection Africaine"/>
+
+            <!-- Frosted info chip bottom-left -->
+            <div class="hero-chip chip-a">
+              <div class="chip-swatch" style="background:#C9A96E"></div>
+              <div>
+                <p class="chip-name">Boubou Prestige</p>
+                <p class="chip-price">75 000 FCFA</p>
               </div>
-              <div class="hpc-info">
-                <p class="hpc-name">Agbada Royal Black Gold</p>
-                <p class="hpc-price">95 000 FCFA</p>
-              </div>
             </div>
-          </div>
-          <div class="hero-floating-card float-1">
-            <span>🧢</span>
-            <div>
-              <p>Diamond Cap</p>
-              <p class="fc-price">15 000 FCFA</p>
+
+            <!-- Rating chip top-right -->
+            <div class="hero-chip chip-b">
+              <div class="chip-stars">★★★★★</div>
+              <p class="chip-reviews">2 000+ clients</p>
             </div>
+
+            <!-- Collection label -->
+            <div class="hero-label">COLLECTION 2026</div>
           </div>
-          <div class="hero-floating-card float-2">
-            <span>👟</span>
-            <div>
-              <p>Sneakers Kente</p>
-              <p class="fc-price">48 000 FCFA</p>
-            </div>
-          </div>
-          <div class="hero-big-icon">◆</div>
+
+          <!-- Decorative ring behind the image -->
+          <div class="hero-ring"></div>
         </div>
       </div>
       <div class="hero-scroll-hint">
@@ -150,6 +152,11 @@ import { CartService } from '../../core/services/cart.service';
     <section class="spotlight">
       <div class="spotlight-left">
         <div class="spotlight-pattern"></div>
+        <div class="spotlight-geo" aria-hidden="true">
+          <div class="sg-tri"></div>
+          <div class="sg-circle"></div>
+          <div class="sg-blob"></div>
+        </div>
         <div class="spotlight-content" dwReveal="slide-right">
           <span class="section-tag light">Heritage · 2026</span>
           <h2>La Collection<br><em>Africaine</em></h2>
@@ -186,11 +193,13 @@ import { CartService } from '../../core/services/cart.service';
       <div class="spotlight-right" dwReveal="slide-left">
         <div class="african-grid">
           @for (p of africanProducts(); track p.id) {
-            <a [routerLink]="['/product', p.id]" class="agrid-card" [style.background]="p.gradient">
-              <span>{{ p.icon }}</span>
-              <div class="agrid-info">
-                <p>{{ p.name }}</p>
-                <span>{{ p.price | number:'1.0-0' }} FCFA</span>
+            <a [routerLink]="['/product', p.id]" class="agrid-card">
+              <img [src]="p.imageUrl" [alt]="p.name" class="agrid-img" loading="lazy"/>
+              <div class="agrid-overlay">
+                <div class="agrid-info">
+                  <p>{{ p.name }}</p>
+                  <span>{{ p.price | number:'1.0-0' }} FCFA</span>
+                </div>
               </div>
             </a>
           }
@@ -201,6 +210,18 @@ import { CartService } from '../../core/services/cart.service';
     <!-- STATS BANNER -->
     <section class="stats-banner">
       <div class="stats-pattern"></div>
+      <!-- Abstract geometric art inspired by the D-Wear logo -->
+      <div class="geo-art" aria-hidden="true">
+        <svg viewBox="0 0 1440 380" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <polygon points="0,0 320,0 320,380 0,190" fill="rgba(0,0,0,0.22)"/>
+          <path d="M280,380 Q420,-55 560,380Z" fill="rgba(0,0,0,0.14)"/>
+          <circle cx="720" cy="190" r="210" fill="rgba(28,27,46,0.45)"/>
+          <ellipse cx="870" cy="290" rx="155" ry="95" fill="rgba(201,169,110,0.28)" transform="rotate(-18 870 290)"/>
+          <path d="M990,0 L1220,0 L1220,380 L990,380 Q1105,190 990,0Z" fill="rgba(0,0,0,0.16)"/>
+          <polygon points="1200,0 1440,0 1440,300" fill="rgba(0,0,0,0.2)"/>
+          <circle cx="1340" cy="380" r="130" fill="rgba(201,169,110,0.15)"/>
+        </svg>
+      </div>
       <div class="section-container">
         <div class="stats-grid">
           @for (stat of stats; track stat.label) {
@@ -266,34 +287,49 @@ import { CartService } from '../../core/services/cart.service';
         repeating-conic-gradient(rgba(201,169,110,0.04) 0 90deg, transparent 90deg 180deg) 30px 30px / 60px 60px;
       pointer-events: none;
     }
-    .hero-shapes { position: absolute; inset: 0; pointer-events: none; }
-    .shape {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.4;
-    }
+    .hero-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .shape { position: absolute; }
+    /* Orange triangle – top-right corner (like logo's angular shapes) */
     .shape-1 {
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, #E8772A, transparent);
-      top: -200px; right: -100px;
-      animation: float1 8s ease-in-out infinite;
+      width: 560px; height: 560px;
+      background: #E8772A;
+      clip-path: polygon(100% 0, 100% 54%, 54% 0);
+      top: 0; right: 0;
+      opacity: 0.28;
     }
+    /* Navy circle – bottom-left (like logo's large dark circle) */
     .shape-2 {
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, #C9A96E, transparent);
-      bottom: -100px; left: 10%;
-      animation: float2 10s ease-in-out infinite;
-      opacity: 0.2;
+      width: 460px; height: 460px;
+      background: #1C1B2E;
+      border-radius: 50%;
+      bottom: -150px; left: -80px;
+      opacity: 0.6;
+      animation: float2 14s ease-in-out infinite;
     }
+    /* Gold/tan arc ring – floating mid-left */
     .shape-3 {
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, #1C1B2E, transparent);
-      top: 30%; right: 30%;
-      opacity: 0.5;
+      width: 220px; height: 220px;
+      border: 50px solid rgba(201,169,110,0.2);
+      border-radius: 50%;
+      top: 28%; left: 8%;
+      animation: slowSpin 35s linear infinite;
     }
-    @keyframes float1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-30px,40px) scale(1.1)} }
-    @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-30px)} }
+    /* Black corner triangle – bottom-right (echoes logo's bottom-right) */
+    .shape-4 {
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 0 0 260px 260px;
+      border-color: transparent transparent rgba(13,13,13,0.45) transparent;
+      bottom: 0; right: 0;
+    }
+    /* Small orange organic blob – top-left accent */
+    .shape-5 {
+      width: 180px; height: 220px;
+      background: rgba(232,119,42,0.12);
+      border-radius: 55% 45% 40% 60% / 60% 40% 60% 40%;
+      top: 12%; left: 40%;
+    }
+    @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,-25px)} }
 
     .hero-content {
       max-width: 1400px;
@@ -412,89 +448,98 @@ import { CartService } from '../../core/services/cart.service';
     /* Hero Visual */
     .hero-visual {
       position: relative;
-      height: 600px;
-      animation: fadeUp 0.8s ease 0.6s both;
-    }
-    .hero-product-card {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 280px;
-    }
-    .hpc-inner {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-    }
-    .hpc-image {
-      height: 320px;
-      background: linear-gradient(135deg, #1C1B2E, #0D0D0D, #C9A96E);
       display: flex;
       align-items: center;
       justify-content: center;
+      animation: fadeUp 0.8s ease 0.6s both;
+    }
+    .hero-img-wrap {
       position: relative;
+      width: 100%;
+      max-width: 440px;
     }
-    .hpc-icon {
-      font-size: 6rem;
-      filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
-      animation: bobbing 3s ease-in-out infinite;
+    .hero-img {
+      width: 100%;
+      height: 580px;
+      object-fit: cover;
+      border-radius: 28px;
+      display: block;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.55);
     }
-    @keyframes bobbing { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
-    .hpc-badge {
-      position: absolute;
-      top: 1rem; left: 1rem;
-      background: #E8772A;
-      color: #fff;
-      padding: 0.25rem 0.6rem;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-    }
-    .hpc-info { padding: 1.25rem; }
-    .hpc-name { color: #fff; font-weight: 700; font-size: 0.95rem; margin: 0 0 0.25rem; }
-    .hpc-price { color: #E8772A; font-weight: 800; font-size: 1.1rem; margin: 0; }
 
-    .hero-floating-card {
+    /* Frosted chips */
+    .hero-chip {
       position: absolute;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 14px;
-      padding: 0.75rem 1rem;
+      background: rgba(13,13,13,0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 18px;
+      padding: 0.8rem 1.1rem;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      backdrop-filter: blur(10px);
+      gap: 0.8rem;
+      color: #fff;
       white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     }
-    .hero-floating-card span { font-size: 1.75rem; }
-    .hero-floating-card p { margin: 0; font-size: 0.82rem; color: rgba(255,255,255,0.8); font-weight: 600; }
-    .fc-price { color: #C9A96E !important; font-weight: 800 !important; font-size: 0.9rem !important; }
-    .float-1 {
-      top: 8%;
-      right: 0;
-      animation: floatCard1 6s ease-in-out infinite;
+    .hero.light-mode .hero-chip {
+      background: rgba(255,255,255,0.9);
+      border-color: rgba(0,0,0,0.08);
+      color: #0D0D0D;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     }
-    .float-2 {
-      bottom: 10%;
-      left: -10px;
-      animation: floatCard2 7s ease-in-out infinite;
+    .hero.light-mode .chip-price { color: #C45A0F; }
+    .hero.light-mode .chip-stars { color: #E8772A; }
+    .hero.light-mode .chip-reviews { color: rgba(0,0,0,0.55); }
+    .chip-a {
+      bottom: 2.5rem;
+      left: -1.75rem;
+      animation: floatChip 5s ease-in-out infinite;
     }
-    @keyframes floatCard1 { 0%,100%{transform:translateY(0) rotate(2deg)} 50%{transform:translateY(-15px) rotate(-1deg)} }
-    @keyframes floatCard2 { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-20px) rotate(1deg)} }
+    .chip-b {
+      top: 2.5rem;
+      right: -1.75rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.15rem;
+      animation: floatChip 5s ease-in-out infinite 1.8s;
+    }
+    @keyframes floatChip { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 
-    .hero-big-icon {
+    .chip-swatch {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .chip-name { margin: 0; font-weight: 700; font-size: 0.82rem; }
+    .chip-price { margin: 0; color: #C9A96E; font-size: 0.73rem; font-weight: 600; }
+    .chip-stars { color: #C9A96E; font-size: 0.88rem; line-height: 1; }
+    .chip-reviews { margin: 0; font-size: 0.73rem; color: rgba(255,255,255,0.7); }
+
+    /* Collection label */
+    .hero-label {
       position: absolute;
-      bottom: 5%;
-      right: -5%;
-      font-size: 8rem;
-      color: rgba(232,119,42,0.08);
+      top: -0.8rem;
+      left: 1.75rem;
+      background: #E8772A;
+      color: #fff;
+      padding: 0.35rem 0.85rem;
+      border-radius: 7px;
+      font-size: 0.6rem;
       font-weight: 900;
+      letter-spacing: 0.14em;
+      box-shadow: 0 4px 20px rgba(232,119,42,0.5);
+    }
+
+    /* Decorative ring */
+    .hero-ring {
+      position: absolute;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      border: 1px solid rgba(232,119,42,0.15);
       pointer-events: none;
-      animation: slowSpin 20s linear infinite;
+      animation: slowSpin 25s linear infinite;
     }
     @keyframes slowSpin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
@@ -572,16 +617,16 @@ import { CartService } from '../../core/services/cart.service';
     .section-header h2 {
       font-size: clamp(2rem, 4vw, 3rem);
       font-weight: 900;
-      color: #0D0D0D;
+      color: var(--text, #0D0D0D);
       margin: 0 0 1rem;
       letter-spacing: -0.02em;
       line-height: 1.15;
     }
     .section-header h2 em { font-style: normal; color: #E8772A; }
-    .section-header p { color: #666; font-size: 1rem; max-width: 500px; margin: 0 auto; line-height: 1.7; }
+    .section-header p { color: var(--text-muted, #666); font-size: 1rem; max-width: 500px; margin: 0 auto; line-height: 1.7; }
 
     /* ===== CATEGORIES ===== */
-    .categories-section { padding: 6rem 0; background: #F9F5F0; }
+    .categories-section { padding: 6rem 0; background: var(--bg-alt, #F9F5F0); }
     .categories-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -593,7 +638,7 @@ import { CartService } from '../../core/services/cart.service';
       overflow: hidden;
       text-decoration: none;
       padding: 2rem 1.5rem;
-      background: #fff;
+      background: var(--card-bg, #fff);
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -623,12 +668,12 @@ import { CartService } from '../../core/services/cart.service';
     }
     .cat-card:hover .cat-icon { transform: scale(1.2) rotate(-5deg); }
     .cat-info { position: relative; z-index: 1; }
-    .cat-info h3 { margin: 0 0 0.25rem; font-size: 1rem; font-weight: 800; color: #0D0D0D; }
+    .cat-info h3 { margin: 0 0 0.25rem; font-size: 1rem; font-weight: 800; color: var(--text, #0D0D0D); }
     .cat-count { font-size: 0.8rem; color: #999; font-weight: 600; transition: color 0.2s; }
     .cat-card:hover .cat-count { color: var(--cat-color, #E8772A); }
 
     /* ===== FEATURED PRODUCTS ===== */
-    .featured-section { padding: 6rem 0; background: #fff; }
+    .featured-section { padding: 6rem 0; background: var(--bg, #fff); }
     .products-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -669,8 +714,33 @@ import { CartService } from '../../core/services/cart.service';
       position: absolute;
       inset: 0;
       background-image:
-        repeating-conic-gradient(rgba(232,119,42,0.08) 0 90deg, transparent 90deg 180deg) 0 0 / 40px 40px;
+        repeating-conic-gradient(rgba(232,119,42,0.06) 0 90deg, transparent 90deg 180deg) 0 0 / 40px 40px;
       pointer-events: none;
+    }
+    .spotlight-geo { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .sg-tri {
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 280px; height: 280px;
+      background: #E8772A;
+      clip-path: polygon(100% 0, 100% 100%, 0 0);
+      opacity: 0.18;
+    }
+    .sg-circle {
+      position: absolute;
+      bottom: -100px; right: 20%;
+      width: 260px; height: 260px;
+      background: #E8772A;
+      border-radius: 50%;
+      opacity: 0.1;
+    }
+    .sg-blob {
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 200px; height: 200px;
+      background: #C9A96E;
+      border-radius: 50%;
+      opacity: 0.12;
     }
     .spotlight-content { position: relative; z-index: 1; max-width: 480px; }
     .spotlight-content h2 {
@@ -694,30 +764,47 @@ import { CartService } from '../../core/services/cart.service';
     .african-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; max-width: 400px; }
     .agrid-card {
       border-radius: 16px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
       text-decoration: none;
       transition: transform 0.3s ease;
       min-height: 150px;
       position: relative;
       overflow: hidden;
+      display: block;
+      background: #1C1B2E;
     }
     .agrid-card:hover { transform: scale(1.03); }
-    .agrid-card span { font-size: 2.5rem; }
-    .agrid-info { margin-top: auto; }
+    .agrid-img {
+      width: 100%; height: 100%;
+      min-height: 150px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .agrid-card:hover .agrid-img { transform: scale(1.06); }
+    .agrid-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%);
+      display: flex;
+      align-items: flex-end;
+      padding: 1rem;
+    }
+    .agrid-info { }
     .agrid-info p { margin: 0 0 0.2rem; color: #fff; font-weight: 700; font-size: 0.82rem; }
-    .agrid-info span { color: rgba(255,255,255,0.7); font-size: 0.78rem; font-weight: 600; }
+    .agrid-info span { color: rgba(255,255,255,0.75); font-size: 0.78rem; font-weight: 600; }
 
     /* ===== STATS ===== */
     .stats-banner { background: #E8772A; padding: 5rem 0; position: relative; overflow: hidden; }
     .stats-pattern {
       position: absolute;
       inset: 0;
-      background-image: repeating-conic-gradient(rgba(0,0,0,0.08) 0 90deg, transparent 90deg 180deg) 0 0 / 30px 30px;
+      background-image: repeating-conic-gradient(rgba(0,0,0,0.06) 0 90deg, transparent 90deg 180deg) 0 0 / 30px 30px;
       pointer-events: none;
     }
+    .geo-art {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .geo-art svg { width: 100%; height: 100%; display: block; }
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -738,7 +825,7 @@ import { CartService } from '../../core/services/cart.service';
     .stat-card p { margin: 0; font-size: 0.82rem; color: rgba(255,255,255,0.65); line-height: 1.5; }
 
     /* ===== NEW ARRIVALS ===== */
-    .new-arrivals { padding: 6rem 0; background: #F9F5F0; }
+    .new-arrivals { padding: 6rem 0; background: var(--bg-alt, #F9F5F0); }
 
     /* ===== NEWSLETTER ===== */
     .newsletter {
@@ -811,6 +898,7 @@ import { CartService } from '../../core/services/cart.service';
 export class HomeComponent {
   productService = inject(ProductService);
   private cartService = inject(CartService);
+  theme = inject(ThemeService);
 
   subscribed = signal(false);
 

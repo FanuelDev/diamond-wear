@@ -13,8 +13,7 @@ import { RouterLink } from '@angular/router';
           <!-- Brand -->
           <div class="footer-brand">
             <div class="footer-logo">
-              <span class="logo-diamond">◆</span>
-              <span>Diamond<span class="orange">Wear</span></span>
+              <img src="logo2.jpg" class="footer-logo-img" alt="Diamond Wear"/>
             </div>
             <p>La mode africaine réinventée. Des pièces qui racontent votre histoire, portées avec fierté.</p>
             <div class="social-links">
@@ -125,14 +124,17 @@ import { RouterLink } from '@angular/router';
     .footer-logo {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: #fff;
       margin-bottom: 1rem;
     }
-    .logo-diamond { color: #E8772A; }
-    .orange { color: #E8772A; }
+    .footer-logo-img {
+      height: 58px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.96);
+    }
     .footer-brand p {
       font-size: 0.9rem;
       line-height: 1.7;

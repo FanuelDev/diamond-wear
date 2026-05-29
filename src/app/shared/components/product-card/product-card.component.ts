@@ -11,11 +11,11 @@ import { CartService } from '../../../core/services/cart.service';
   template: `
     <article class="card" [class.out-of-stock]="!product.inStock">
       <a [routerLink]="['/product', product.id]" class="card-image-wrap">
-        <div class="card-image" [style.background]="product.gradient">
-          <span class="product-icon">{{ product.icon }}</span>
+        <div class="card-image">
+          <img [src]="product.imageUrl" [alt]="product.name" class="product-img" loading="lazy"/>
           <div class="image-overlay">
             <button class="quick-view-btn" (click)="$event.preventDefault(); onQuickAdd()">
-              <span>+ Ajouter au panier</span>
+              + Ajouter au panier
             </button>
           </div>
         </div>
@@ -24,9 +24,7 @@ import { CartService } from '../../../core/services/cart.service';
             <span class="badge badge-new">NEW</span>
           }
           @if (product.originalPrice) {
-            <span class="badge badge-sale">
-              -{{ discount() }}%
-            </span>
+            <span class="badge badge-sale">-{{ discount() }}%</span>
           }
           @if (!product.inStock) {
             <span class="badge badge-sold">Épuisé</span>
@@ -63,7 +61,7 @@ import { CartService } from '../../../core/services/cart.service';
   styles: [`
     .card {
       position: relative;
-      background: #fff;
+      background: var(--card-bg, #fff);
       border-radius: 16px;
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -76,24 +74,23 @@ import { CartService } from '../../../core/services/cart.service';
     .card-image {
       width: 100%;
       aspect-ratio: 3/4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       position: relative;
       overflow: hidden;
+      background: var(--surface-2, #F5F0EB);
     }
-    .product-icon {
-      font-size: 5rem;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
-      transition: transform 0.4s ease;
-      user-select: none;
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    .card:hover .product-icon { transform: scale(1.1) rotate(-5deg); }
+    .card:hover .product-img { transform: scale(1.06); }
 
     .image-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(13,13,13,0.5);
+      background: rgba(13,13,13,0.45);
       display: flex;
       align-items: flex-end;
       justify-content: center;
@@ -112,9 +109,10 @@ import { CartService } from '../../../core/services/cart.service';
       font-weight: 700;
       font-size: 0.85rem;
       cursor: pointer;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       transform: translateY(10px);
       transition: transform 0.3s ease, background 0.2s;
+      white-space: nowrap;
     }
     .card:hover .quick-view-btn { transform: translateY(0); }
     .quick-view-btn:hover { background: #C45A0F; }
@@ -142,9 +140,9 @@ import { CartService } from '../../../core/services/cart.service';
     .card-body { padding: 1rem 1.25rem 1.25rem; }
     .card-rating { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.3rem; }
     .stars { color: #E8772A; font-size: 0.85rem; }
-    .review-count { color: #999; font-size: 0.78rem; }
+    .review-count { color: var(--text-muted, #999); font-size: 0.78rem; }
 
-    .card-name { margin: 0 0 0.5rem; font-size: 0.95rem; font-weight: 700; color: #0D0D0D; line-height: 1.3; }
+    .card-name { margin: 0 0 0.5rem; font-size: 0.95rem; font-weight: 700; color: var(--text, #0D0D0D); line-height: 1.3; }
     .card-name a { text-decoration: none; color: inherit; }
     .card-name a:hover { color: #E8772A; }
 
@@ -152,13 +150,13 @@ import { CartService } from '../../../core/services/cart.service';
     .color-dot {
       width: 14px; height: 14px;
       border-radius: 50%;
-      border: 2px solid #eee;
+      border: 2px solid var(--border-col, #eee);
       display: inline-block;
     }
 
     .card-price { display: flex; align-items: baseline; gap: 0.6rem; }
-    .price-current { font-size: 1rem; font-weight: 800; color: #0D0D0D; }
-    .price-original { font-size: 0.85rem; color: #999; text-decoration: line-through; }
+    .price-current { font-size: 1rem; font-weight: 800; color: var(--text, #0D0D0D); }
+    .price-original { font-size: 0.85rem; color: var(--text-muted, #999); text-decoration: line-through; }
 
     .added-toast {
       position: absolute;

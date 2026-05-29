@@ -22,6 +22,7 @@ export interface Product {
   inStock: boolean;
   rating: number;
   reviewCount: number;
+  imageUrl: string;
   gradient: string;
   accentColor: string;
   icon: string;

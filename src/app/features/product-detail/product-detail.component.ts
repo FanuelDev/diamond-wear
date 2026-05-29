@@ -28,13 +28,16 @@ import { CATEGORY_LABELS } from '../../core/models/product.model';
         <div class="detail-layout">
           <!-- Image / Visual -->
           <div class="detail-visual">
-            <div class="main-image" [style.background]="selectedGradient()">
-              <span class="product-emoji">{{ product()!.icon }}</span>
+            <div class="main-image">
+              <img [src]="product()!.imageUrl" [alt]="product()!.name" class="main-product-img"/>
               @if (product()!.isNew) {
                 <div class="img-badge new">NEW</div>
               }
               @if (product()!.originalPrice) {
                 <div class="img-badge sale">-{{ discount() }}%</div>
+              }
+              @if (!product()!.inStock) {
+                <div class="img-badge sold">Épuisé</div>
               }
             </div>
             <div class="image-thumbs">
@@ -218,19 +221,18 @@ import { CATEGORY_LABELS } from '../../core/models/product.model';
       width: 100%;
       aspect-ratio: 4/5;
       border-radius: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       position: relative;
       overflow: hidden;
       margin-bottom: 1rem;
+      background: var(--surface-2, #F5F0EB);
     }
-    .product-emoji {
-      font-size: 9rem;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
-      animation: float 4s ease-in-out infinite;
+    .main-product-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
     }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+    .main-image:hover .main-product-img { transform: scale(1.04); }
     .img-badge {
       position: absolute;
       top: 1.25rem;
@@ -242,6 +244,7 @@ import { CATEGORY_LABELS } from '../../core/models/product.model';
     }
     .img-badge.new { left: 1.25rem; background: #E8772A; color: #fff; }
     .img-badge.sale { right: 1.25rem; background: #1C1B2E; color: #C9A96E; }
+    .img-badge.sold { left: 1.25rem; background: rgba(0,0,0,0.7); color: #fff; }
 
     .image-thumbs { display: flex; gap: 0.75rem; }
     .thumb {
