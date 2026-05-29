@@ -15,8 +15,8 @@ type Step = 'info' | 'payment' | 'review';
   template: `
     <div class="checkout-page">
       <div class="checkout-header">
-        <a routerLink="/" class="checkout-logo">
-          <span>◆</span> Diamond<span class="orange">Wear</span>
+        <a routerLink="/" class="checkout-logo" aria-label="Diamond Wear – Accueil">
+          <img src="logo2.jpg" class="checkout-logo-img" alt="Diamond Wear"/>
         </a>
         <div class="steps-indicator">
           <div class="step" [class.active]="currentStep() === 'info'" [class.done]="stepDone('info')">
@@ -271,8 +271,8 @@ type Step = 'info' | 'payment' | 'review';
                 <div class="review-items">
                   @for (item of cart.items(); track $index) {
                     <div class="review-item">
-                      <div class="ri-image" [style.background]="item.product.gradient">
-                        <span>{{ item.product.icon }}</span>
+                      <div class="ri-image">
+                        <img [src]="item.product.imageUrl" [alt]="item.product.name" class="ri-product-img"/>
                       </div>
                       <div class="ri-info">
                         <p class="ri-name">{{ item.product.name }}</p>
@@ -305,8 +305,10 @@ type Step = 'info' | 'payment' | 'review';
             <div class="summary-items">
               @for (item of cart.items(); track $index) {
                 <div class="summary-item">
-                  <div class="si-img" [style.background]="item.product.gradient">
-                    <span>{{ item.product.icon }}</span>
+                  <div class="si-img"
+                       [style.backgroundImage]="'url(' + item.product.imageUrl + ')'"
+                       [style.backgroundSize]="'cover'"
+                       [style.backgroundPosition]="'center top'">
                     <span class="si-qty">{{ item.quantity }}</span>
                   </div>
                   <div class="si-info">
@@ -341,7 +343,7 @@ type Step = 'info' | 'payment' | 'review';
     </div>
   `,
   styles: [`
-    .checkout-page { min-height: 100vh; background: #F9F5F0; }
+    .checkout-page { min-height: 100vh; background: var(--bg-alt, #F9F5F0); padding-top: 0; }
     .checkout-header {
       background: #0D0D0D;
       padding: 1.25rem 2rem;
@@ -351,18 +353,16 @@ type Step = 'info' | 'payment' | 'review';
       flex-wrap: wrap;
       gap: 1rem;
     }
-    .checkout-logo {
-      font-size: 1.25rem;
-      font-weight: 900;
-      color: #fff;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      letter-spacing: -0.02em;
+    .checkout-logo { text-decoration: none; display: flex; align-items: center; }
+    .checkout-logo-img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 8px;
+      padding: 3px 7px;
+      background: rgba(255,255,255,0.96);
     }
-    .checkout-logo span:first-child { color: #E8772A; }
-    .orange { color: #E8772A; }
 
     .steps-indicator {
       display: flex;
@@ -404,26 +404,27 @@ type Step = 'info' | 'payment' | 'review';
     }
 
     .form-card {
-      background: #fff;
+      background: var(--surface, #fff);
       border-radius: 20px;
       padding: 2rem;
       box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+      border: 1px solid var(--border-col, transparent);
     }
-    .form-card h2 { font-size: 1.4rem; font-weight: 900; color: #0D0D0D; margin: 0 0 1.75rem; letter-spacing: -0.02em; }
+    .form-card h2 { font-size: 1.4rem; font-weight: 900; color: var(--text, #0D0D0D); margin: 0 0 1.75rem; letter-spacing: -0.02em; }
 
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
     .field { display: flex; flex-direction: column; gap: 0.4rem; }
     .field.full { grid-column: 1 / -1; }
-    .field label { font-size: 0.8rem; font-weight: 700; color: #555; letter-spacing: 0.03em; }
+    .field label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted, #555); letter-spacing: 0.03em; }
     .field input, .field select {
       padding: 0.75rem 1rem;
-      border: 1.5px solid #e0e0e0;
+      border: 1.5px solid var(--input-border, #e0e0e0);
       border-radius: 10px;
       font-size: 0.9rem;
-      color: #0D0D0D;
+      color: var(--text, #0D0D0D);
       outline: none;
       transition: border-color 0.2s;
-      background: #fff;
+      background: var(--input-bg, #fff);
     }
     .field input:focus, .field select:focus { border-color: #E8772A; }
     .field input.error { border-color: #e53e3e; }
@@ -436,14 +437,14 @@ type Step = 'info' | 'payment' | 'review';
       align-items: center;
       gap: 1rem;
       padding: 1rem 1.25rem;
-      border: 2px solid #e0e0e0;
+      border: 2px solid var(--border-col, #e0e0e0);
       border-radius: 14px;
-      background: #fff;
+      background: var(--surface-2, #fff);
       cursor: pointer;
       text-align: left;
       transition: border-color 0.2s, background 0.2s;
     }
-    .pay-method.active { border-color: #E8772A; background: rgba(232,119,42,0.04); }
+    .pay-method.active { border-color: #E8772A; background: rgba(232,119,42,0.06); }
     .pm-icon {
       width: 56px; height: 36px;
       border-radius: 8px;
@@ -459,8 +460,8 @@ type Step = 'info' | 'payment' | 'review';
     .mixx-icon { background: #FF6B00; color: #fff; }
     .moov-icon { background: #00A0E3; color: #fff; }
     .pm-info { flex: 1; }
-    .pm-info strong { display: block; font-size: 0.9rem; font-weight: 700; color: #0D0D0D; margin-bottom: 0.1rem; }
-    .pm-info p { margin: 0; font-size: 0.78rem; color: #999; }
+    .pm-info strong { display: block; font-size: 0.9rem; font-weight: 700; color: var(--text, #0D0D0D); margin-bottom: 0.1rem; }
+    .pm-info p { margin: 0; font-size: 0.78rem; color: var(--text-muted, #999); }
     .pm-radio {
       width: 20px; height: 20px;
       border-radius: 50%;
@@ -541,7 +542,7 @@ type Step = 'info' | 'payment' | 'review';
     }
 
     /* Mobile Money */
-    .mobile-money-form { padding: 1.5rem; background: #F9F5F0; border-radius: 14px; margin-bottom: 1.5rem; }
+    .mobile-money-form { padding: 1.5rem; background: var(--surface-2, #F9F5F0); border-radius: 14px; margin-bottom: 1.5rem; border: 1px solid var(--border-col, transparent); }
     .mobile-pay-info { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
     .mm-logo {
       font-size: 1.1rem;
@@ -557,21 +558,21 @@ type Step = 'info' | 'payment' | 'review';
     .mm-logo span { font-size: 0.6rem; font-weight: 500; opacity: 0.8; }
     .mm-logo.mixx { background: #FF6B00; color: #fff; }
     .mm-logo.moov { background: #00A0E3; color: #fff; }
-    .mobile-pay-info p { color: #666; font-size: 0.85rem; line-height: 1.5; margin: 0; }
+    .mobile-pay-info p { color: var(--text-muted, #666); font-size: 0.85rem; line-height: 1.5; margin: 0; }
     .phone-input {
       display: flex;
       align-items: center;
-      border: 1.5px solid #e0e0e0;
+      border: 1.5px solid var(--input-border, #e0e0e0);
       border-radius: 10px;
       overflow: hidden;
-      background: #fff;
+      background: var(--input-bg, #fff);
     }
     .phone-prefix {
       padding: 0.75rem 1rem;
-      background: #f5f5f5;
-      border-right: 1px solid #e0e0e0;
+      background: var(--surface, #f5f5f5);
+      border-right: 1px solid var(--input-border, #e0e0e0);
       font-size: 0.88rem;
-      color: #555;
+      color: var(--text-muted, #555);
       white-space: nowrap;
     }
     .phone-input input {
@@ -580,10 +581,11 @@ type Step = 'info' | 'payment' | 'review';
       padding: 0.75rem 1rem;
       outline: none;
       font-size: 0.9rem;
+      color: var(--text, #0D0D0D);
       background: transparent;
     }
     .mm-steps { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem; }
-    .mm-step { display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; color: #555; }
+    .mm-step { display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; color: var(--text-muted, #555); }
     .ms-num {
       width: 24px; height: 24px;
       border-radius: 50%;
@@ -601,16 +603,16 @@ type Step = 'info' | 'payment' | 'review';
     .form-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
     .btn-back {
       padding: 0.9rem 1.5rem;
-      border: 1.5px solid #e0e0e0;
+      border: 1.5px solid var(--border-col, #e0e0e0);
       border-radius: 12px;
-      background: #fff;
+      background: var(--surface-2, #fff);
       cursor: pointer;
       font-size: 0.9rem;
       font-weight: 700;
-      color: #555;
+      color: var(--text-muted, #555);
       transition: border-color 0.2s, color 0.2s;
     }
-    .btn-back:hover { border-color: #0D0D0D; color: #0D0D0D; }
+    .btn-back:hover { border-color: var(--text, #0D0D0D); color: var(--text, #0D0D0D); }
     .btn-next, .btn-confirm {
       flex: 1;
       padding: 1rem;
@@ -641,14 +643,14 @@ type Step = 'info' | 'payment' | 'review';
     /* Review Step */
     .review-section {
       padding: 1.25rem 0;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--border-col, #f0f0f0);
       margin-bottom: 0.5rem;
     }
     .review-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
-    .review-row h3 { margin: 0; font-size: 0.95rem; font-weight: 800; color: #0D0D0D; }
+    .review-row h3 { margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text, #0D0D0D); }
     .edit-btn {
       background: none;
-      border: 1px solid #e0e0e0;
+      border: 1px solid var(--border-col, #e0e0e0);
       border-radius: 6px;
       padding: 0.3rem 0.75rem;
       font-size: 0.78rem;
@@ -658,44 +660,43 @@ type Step = 'info' | 'payment' | 'review';
       transition: background 0.2s;
     }
     .edit-btn:hover { background: rgba(232,119,42,0.1); }
-    .review-info p { margin: 0 0 0.2rem; font-size: 0.88rem; color: #555; }
+    .review-info p { margin: 0 0 0.2rem; font-size: 0.88rem; color: var(--text-muted, #555); }
     .review-items { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.75rem; }
     .review-item { display: flex; align-items: center; gap: 0.75rem; }
     .ri-image {
       width: 48px; height: 48px;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
+      overflow: hidden;
       flex-shrink: 0;
+      background: var(--surface-2, #F5F0EB);
     }
+    .ri-product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .ri-info { flex: 1; }
-    .ri-name { margin: 0 0 0.1rem; font-weight: 700; font-size: 0.88rem; color: #0D0D0D; }
-    .ri-meta { margin: 0; font-size: 0.75rem; color: #999; }
-    .ri-price { font-weight: 800; font-size: 0.9rem; color: #0D0D0D; white-space: nowrap; }
+    .ri-name { margin: 0 0 0.1rem; font-weight: 700; font-size: 0.88rem; color: var(--text, #0D0D0D); }
+    .ri-meta { margin: 0; font-size: 0.75rem; color: var(--text-muted, #999); }
+    .ri-price { font-weight: 800; font-size: 0.9rem; color: var(--text, #0D0D0D); white-space: nowrap; }
 
     /* Order Summary */
     .order-summary { position: sticky; top: 2rem; }
     .summary-card {
-      background: #fff;
+      background: var(--surface, #fff);
       border-radius: 20px;
       padding: 1.75rem;
       box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+      border: 1px solid var(--border-col, transparent);
     }
-    .summary-card h3 { font-size: 1.1rem; font-weight: 800; color: #0D0D0D; margin: 0 0 1.25rem; }
-    .summary-items { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
-    .summary-item { display: flex; align-items: center; gap: 0.75rem; }
+    .summary-card h3 { font-size: 1.1rem; font-weight: 800; color: var(--text, #0D0D0D); margin: 0 0 1.25rem; }
+    .summary-items { display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border-col, #f0f0f0); }
+    .summary-item { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; width: 56px; }
     .si-img {
-      width: 50px; height: 56px;
+      width: 56px; height: 64px;
       border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
+      overflow: hidden;
       position: relative;
       flex-shrink: 0;
+      background: var(--surface-2, #F5F0EB);
     }
+    .si-product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .si-qty {
       position: absolute;
       top: -6px; right: -6px;
@@ -709,33 +710,32 @@ type Step = 'info' | 'payment' | 'review';
       justify-content: center;
       font-weight: 800;
     }
-    .si-info { flex: 1; min-width: 0; }
-    .si-info p { margin: 0 0 0.1rem; font-size: 0.85rem; font-weight: 700; color: #0D0D0D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .si-meta { font-size: 0.75rem; color: #999; font-weight: 400 !important; }
-    .si-price { font-weight: 800; font-size: 0.88rem; color: #0D0D0D; white-space: nowrap; }
+    .si-info { display: none; }
+    .si-meta { display: none; }
+    .si-price { display: none; }
 
     .summary-totals { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
-    .total-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: #555; }
-    .total-row span:last-child { font-weight: 600; color: #0D0D0D; }
+    .total-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-muted, #555); }
+    .total-row span:last-child { font-weight: 600; color: var(--text, #0D0D0D); }
     .total-row.final {
-      border-top: 2px solid #0D0D0D;
+      border-top: 2px solid var(--border-col, #0D0D0D);
       padding-top: 0.75rem;
       margin-top: 0.25rem;
       font-weight: 800;
       font-size: 1.05rem;
-      color: #0D0D0D;
+      color: var(--text, #0D0D0D);
     }
-    .total-row.final span { color: #0D0D0D !important; }
+    .total-row.final span { color: var(--text, #0D0D0D) !important; }
 
     .secure-badge {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: #999;
+      color: var(--text-muted, #999);
       font-size: 0.8rem;
       justify-content: center;
       padding-top: 1rem;
-      border-top: 1px solid #f0f0f0;
+      border-top: 1px solid var(--border-col, #f0f0f0);
     }
     .secure-badge svg { color: #4CAF50; }
 

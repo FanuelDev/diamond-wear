@@ -14,7 +14,25 @@ import { CATEGORY_LABELS, CATEGORY_ICONS, ProductCategory } from '../../core/mod
   template: `
     <!-- Page Header -->
     <section class="shop-hero">
-      <div class="hero-lines"></div>
+      <!-- Brand shapes — inspired by the D-Wear logo -->
+      <div class="hs hs-orange-tr"></div>
+      <div class="hs hs-navy-bl"></div>
+      <div class="hs hs-wedge-br"></div>
+      <div class="hs hs-gold-tl"></div>
+
+      <!-- Circular ring badge (logo badge echo) -->
+      <svg class="hero-ring" viewBox="0 0 320 320" aria-hidden="true">
+        <defs>
+          <path id="rp" d="M160,160 m-118,0 a118,118 0 1,1 236,0 a118,118 0 1,1-236,0"/>
+        </defs>
+        <circle cx="160" cy="160" r="120" fill="none" stroke="rgba(232,119,42,0.18)" stroke-width="0.8"/>
+        <circle cx="160" cy="160" r="108" fill="none" stroke="rgba(232,119,42,0.07)" stroke-width="0.5"/>
+        <text font-size="9.5" letter-spacing="7.2" fill="rgba(255,255,255,0.09)"
+              font-family="'Space Grotesk', sans-serif" font-weight="700">
+          <textPath href="#rp">DIAMOND WEAR • DIAMOND WEAR •</textPath>
+        </text>
+      </svg>
+
       <div class="shop-hero-content">
         <div class="hero-eyebrow">
           <span class="eyebrow-rule"></span>
@@ -148,19 +166,57 @@ import { CATEGORY_LABELS, CATEGORY_ICONS, ProductCategory } from '../../core/mod
       position: relative;
       overflow: hidden;
     }
-    /* Subtle diagonal-stripe texture */
-    .hero-lines {
-      position: absolute;
-      inset: 0;
-      background-image: repeating-linear-gradient(
-        -55deg,
-        transparent,
-        transparent 38px,
-        rgba(232,119,42,0.04) 38px,
-        rgba(232,119,42,0.04) 39px
-      );
-      pointer-events: none;
+
+    /* ── Brand shapes ────────────────────────────────────────── */
+    .hs { position: absolute; pointer-events: none; }
+
+    /* Orange organic blob — top right (logo large orange element) */
+    .hs-orange-tr {
+      width: 380px; height: 420px;
+      top: -100px; right: -110px;
+      background: #E8772A;
+      border-radius: 55% 45% 62% 38% / 48% 58% 42% 52%;
+      opacity: 0.11;
     }
+
+    /* Navy arc — bottom left (logo navy circle) */
+    .hs-navy-bl {
+      width: 400px; height: 400px;
+      bottom: -220px; left: -90px;
+      background: #1C1B2E;
+      border-radius: 50%;
+      opacity: 0.65;
+    }
+
+    /* Orange triangle wedge — bottom right (logo geometric wedge) */
+    .hs-wedge-br {
+      width: 260px; height: 160px;
+      bottom: 0; right: 0;
+      background: #E8772A;
+      clip-path: polygon(100% 0%, 100% 100%, 0% 100%);
+      opacity: 0.13;
+    }
+
+    /* Gold diamond accent — top left (logo gold teardrop) */
+    .hs-gold-tl {
+      width: 100px; height: 100px;
+      top: 38%; left: 4%;
+      background: #C9A96E;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      opacity: 0.14;
+    }
+
+    /* Circular ring — logo badge echo, centered behind text */
+    .hero-ring {
+      position: absolute;
+      width: 340px; height: 340px;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      overflow: visible;
+    }
+    /* ──────────────────────────────────────────────────────── */
+
     .shop-hero-content { position: relative; z-index: 1; }
 
     /* Eyebrow — "Collection" / "Boutique" with orange rules */

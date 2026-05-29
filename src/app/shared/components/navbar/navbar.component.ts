@@ -22,11 +22,14 @@ import { CartComponent } from '../../../features/cart/cart.component';
         <!-- Desktop Nav -->
         <nav class="nav-links">
           <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Accueil</a>
-          <div class="nav-dropdown">
+          <div class="nav-dropdown"
+               (mouseenter)="openDropdown()"
+               (mouseleave)="closeDropdown()">
             <a routerLink="/shop" routerLinkActive="active">Boutique</a>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu" [class.visible]="dropdownOpen()">
               @for (cat of categories; track cat.key) {
-                <a [routerLink]="['/shop']" [queryParams]="{cat: cat.key}" class="dropdown-item">
+                <a [routerLink]="['/shop']" [queryParams]="{cat: cat.key}" class="dropdown-item"
+                   (click)="dropdownOpen.set(false)">
                   {{ cat.label }}
                 </a>
               }
@@ -192,21 +195,41 @@ import { CartComponent } from '../../../features/cart/cart.component';
     .nav-dropdown { position: relative; }
     .dropdown-menu {
       position: absolute;
-      top: calc(100% + 1rem);
+      top: calc(100% + 0.75rem);
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateY(-4px);
       background: #0D0D0D;
       border: 1px solid rgba(232,119,42,0.2);
       border-radius: 12px;
       padding: 0.75rem;
       min-width: 200px;
-      display: none;
+      display: flex;
       flex-direction: column;
       gap: 0.25rem;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      /* hidden by default */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
     }
-    .navbar.light-mode .dropdown-menu { background: #fff; box-shadow: 0 20px 60px rgba(0,0,0,0.12); border-color: #E8E8E8; }
-    .nav-dropdown:hover .dropdown-menu { display: flex; }
+    /* Invisible bridge that fills the gap between trigger and menu */
+    .dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -0.75rem;
+      left: 0; right: 0;
+      height: 0.75rem;
+    }
+    .navbar.light-mode .dropdown-menu {
+      background: #fff;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      border-color: #E8E8E8;
+    }
+    .dropdown-menu.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
     .dropdown-item {
       padding: 0.6rem 1rem;
       border-radius: 8px;
@@ -356,14 +379,27 @@ import { CartComponent } from '../../../features/cart/cart.component';
 export class NavbarComponent {
   cart = inject(CartService);
   theme = inject(ThemeService);
-  scrolled = signal(false);
-  mobileOpen = signal(false);
-  searchOpen = signal(false);
+  scrolled    = signal(false);
+  mobileOpen  = signal(false);
+  searchOpen  = signal(false);
+  dropdownOpen = signal(false);
+
+  private _closeTimer: ReturnType<typeof setTimeout> | null = null;
 
   categories = Object.entries(CATEGORY_LABELS).map(([key, label]) => ({
     key: key as ProductCategory,
     label
   }));
+
+  openDropdown(): void {
+    if (this._closeTimer) { clearTimeout(this._closeTimer); this._closeTimer = null; }
+    this.dropdownOpen.set(true);
+  }
+
+  closeDropdown(): void {
+    // Small grace period so the mouse can travel from the trigger to the menu
+    this._closeTimer = setTimeout(() => this.dropdownOpen.set(false), 120);
+  }
 
   @HostListener('window:scroll')
   onScroll(): void {

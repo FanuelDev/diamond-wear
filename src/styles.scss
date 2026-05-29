@@ -221,23 +221,62 @@ input[type='number'] { -moz-appearance: textfield; }
   .empty-state        { color: var(--text-muted) !important; }
   .empty-state h3     { color: var(--text) !important; }
 
+  /* Product detail */
+  .breadcrumb a              { color: var(--text-muted) !important; }
+  .breadcrumb span           { color: var(--text-muted) !important; }
+  .breadcrumb span:last-child{ color: var(--text) !important; }
+  .detail-info h1            { color: var(--text) !important; }
+  .rating-val                { color: var(--text) !important; }
+  .stars-display span:not(.filled) { color: rgba(255,255,255,0.12) !important; }
+  .price-main                { color: var(--text) !important; }
+  .description               { color: var(--text-muted) !important; }
+  .option-label span         { color: var(--text-muted) !important; }
+  .option-label strong       { color: var(--text) !important; }
+  .size-btn                  { background: var(--surface) !important; border-color: var(--border-col) !important; color: var(--text) !important; }
+  .size-btn:hover            { border-color: var(--orange) !important; }
+  .qty-control               { border-color: var(--border-col) !important; }
+  .qty-control button        { background: var(--surface-2) !important; color: var(--text) !important; }
+  .qty-control span          { color: var(--text) !important; }
+  .btn-add-cart              { background: var(--surface-2) !important; border: 1.5px solid var(--border-col) !important; }
+  .trust-badges              { background: var(--surface) !important; }
+  .badge-item strong         { color: var(--text) !important; }
+  .badge-item p              { color: var(--text-muted) !important; }
+  .tag                       { background: var(--surface-2) !important; color: var(--text-muted) !important; }
+  .related-header h2         { color: var(--text) !important; }
+  .thumb.active              { border-color: var(--orange) !important; }
+  .not-found h2              { color: var(--text) !important; }
+
   /* Checkout */
-  .checkout-page      { background: var(--bg) !important; }
-  .checkout-header    { background: var(--surface) !important; border-color: var(--border-col) !important; }
-  .step-label         { color: var(--text-muted) !important; }
-  .step.active .step-label { color: var(--text) !important; }
-  .info-card, .payment-section, .review-section { background: var(--surface) !important; border-color: var(--border-col) !important; }
-  .card-title         { color: var(--text) !important; }
-  .form-group label   { color: var(--text-muted) !important; }
-  .form-group input, .form-group select { background: var(--input-bg) !important; color: var(--text) !important; border-color: var(--input-border) !important; }
-  .order-summary-sidebar { background: var(--surface) !important; border-color: var(--border-col) !important; }
-  .summary-title      { color: var(--text) !important; }
-  .summary-item-name  { color: var(--text) !important; }
-  .summary-item-meta  { color: var(--text-muted) !important; }
-  .summary-total      { border-color: var(--border-col) !important; color: var(--text) !important; }
-  .payment-method     { background: var(--surface-2) !important; border-color: var(--border-col) !important; color: var(--text) !important; }
-  .payment-method.active { border-color: var(--orange) !important; }
-  .payment-method label { color: var(--text) !important; }
+  .checkout-page             { background: var(--bg) !important; }
+  .form-card                 { background: var(--surface) !important; box-shadow: none !important; border: 1px solid var(--border-col) !important; }
+  .form-card h2              { color: var(--text) !important; }
+  .field label               { color: var(--text-muted) !important; }
+  .field input,
+  .field select              { background: var(--input-bg) !important; color: var(--text) !important; border-color: var(--input-border) !important; }
+  .pay-method                { background: var(--surface-2) !important; border-color: var(--border-col) !important; }
+  .pay-method.active         { background: rgba(232,119,42,0.1) !important; border-color: var(--orange) !important; }
+  .pm-info strong            { color: var(--text) !important; }
+  .pm-radio                  { border-color: var(--border-col) !important; }
+  .btn-back                  { background: var(--surface-2) !important; border-color: var(--border-col) !important; color: var(--text) !important; }
+  .mobile-money-form         { background: var(--surface-2) !important; }
+  .mobile-pay-info p         { color: var(--text-muted) !important; }
+  .phone-input               { background: var(--input-bg) !important; border-color: var(--input-border) !important; }
+  .phone-prefix              { background: var(--surface) !important; border-color: var(--input-border) !important; color: var(--text-muted) !important; }
+  .mm-step                   { color: var(--text-muted) !important; }
+  .review-section            { border-color: var(--border-col) !important; }
+  .review-row h3             { color: var(--text) !important; }
+  .review-info p             { color: var(--text-muted) !important; }
+  .edit-btn                  { border-color: var(--border-col) !important; }
+  .ri-name                   { color: var(--text) !important; }
+  .ri-price                  { color: var(--text) !important; }
+  .summary-card              { background: var(--surface) !important; box-shadow: none !important; border: 1px solid var(--border-col) !important; }
+  .summary-card h3           { color: var(--text) !important; }
+  .si-info p                 { color: var(--text) !important; }
+  .si-price                  { color: var(--text) !important; }
+  .summary-items             { border-color: var(--border-col) !important; }
+  .total-row.final           { border-color: var(--border-col) !important; color: var(--text) !important; }
+  .total-row.final span      { color: var(--text) !important; }
+  .secure-badge              { border-color: var(--border-col) !important; color: var(--text-muted) !important; }
 
   /* Btn outline */
   .btn-outline        { border-color: var(--border-col) !important; color: var(--text) !important; }

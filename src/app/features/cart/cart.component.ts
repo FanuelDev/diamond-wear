@@ -232,18 +232,18 @@ import { CartService } from '../../core/services/cart.service';
       justify-content: space-between;
       padding: 0.4rem 0;
       font-size: 0.9rem;
-      color: #555;
+      color: var(--text-muted, #555);
     }
-    .total-row span:last-child { font-weight: 600; color: #0D0D0D; }
+    .total-row span:last-child { font-weight: 600; color: var(--text, #0D0D0D); }
     .total-final {
-      border-top: 2px solid #0D0D0D;
+      border-top: 2px solid var(--border-col, #0D0D0D);
       margin-top: 0.5rem;
       padding-top: 0.75rem;
       font-weight: 800;
       font-size: 1.1rem;
-      color: #0D0D0D;
+      color: var(--text, #0D0D0D);
     }
-    .total-final span { color: #0D0D0D !important; }
+    .total-final span { color: var(--text, #0D0D0D) !important; }
     .free-ship-hint {
       font-size: 0.75rem;
       color: #E8772A;
